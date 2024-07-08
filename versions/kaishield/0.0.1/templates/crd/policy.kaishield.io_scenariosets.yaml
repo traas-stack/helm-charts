@@ -1,0 +1,531 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: scenariosets.policy.kaishield.io
+spec:
+  group: policy.kaishield.io
+  names:
+    kind: ScenarioSet
+    listKind: ScenarioSetList
+    plural: scenariosets
+    shortNames:
+    - ss
+    singular: scenarioset
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: ScenarioSet is the Schema for the scenariosets API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ScenarioSetSpec defines the desired state of ScenarioSet
+            properties:
+              inputs:
+                items:
+                  description: Input is json schema for input validation
+                  properties:
+                    name:
+                      description: Unique within ScenarioSet
+                      type: string
+                    schema:
+                      type: object
+                      x-kubernetes-preserve-unknown-fields: true
+                  type: object
+                type: array
+              scenarios:
+                items:
+                  properties:
+                    input:
+                      type: string
+                    name:
+                      maxLength: 253
+                      pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                      type: string
+                    severity:
+                      enum:
+                      - High
+                      - Medium
+                      - Low
+                      type: string
+                    steps:
+                      items:
+                        properties:
+                          latches:
+                            items:
+                              description: LatchSpec defines the desired state of
+                                Latch
+                              properties:
+                                disabled:
+                                  default: false
+                                  type: boolean
+                                enforcement:
+                                  description: Enforcement defines Enforcement of
+                                    Policy
+                                  properties:
+                                    effect:
+                                      default: DryRun
+                                      enum:
+                                      - DryRun
+                                      - Warn
+                                      - Deny
+                                      type: string
+                                    failurePolicy:
+                                      default: Fail
+                                      enum:
+                                      - Ignore
+                                      - Fail
+                                      type: string
+                                    message:
+                                      type: string
+                                  type: object
+                                match:
+                                  description: Match defines the filter of ServiceRun
+                                  properties:
+                                    labelSelector:
+                                      description: |-
+                                        A label selector is a label query over a set of resources. The result of matchLabels and
+                                        matchExpressions are ANDed. An empty label selector matches all objects. A null
+                                        label selector matches no objects.
+                                      properties:
+                                        matchExpressions:
+                                          description: matchExpressions is a list
+                                            of label selector requirements. The requirements
+                                            are ANDed.
+                                          items:
+                                            description: |-
+                                              A label selector requirement is a selector that contains values, a key, and an operator that
+                                              relates the key and values.
+                                            properties:
+                                              key:
+                                                description: key is the label key
+                                                  that the selector applies to.
+                                                type: string
+                                              operator:
+                                                description: |-
+                                                  operator represents a key's relationship to a set of values.
+                                                  Valid operators are In, NotIn, Exists and DoesNotExist.
+                                                type: string
+                                              values:
+                                                description: |-
+                                                  values is an array of string values. If the operator is In or NotIn,
+                                                  the values array must be non-empty. If the operator is Exists or DoesNotExist,
+                                                  the values array must be empty. This array is replaced during a strategic
+                                                  merge patch.
+                                                items:
+                                                  type: string
+                                                type: array
+                                            required:
+                                            - key
+                                            - operator
+                                            type: object
+                                          type: array
+                                        matchLabels:
+                                          additionalProperties:
+                                            type: string
+                                          description: |-
+                                            matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels
+                                            map is equivalent to an element of matchExpressions, whose key field is "key", the
+                                            operator is "In", and the values array contains only "value". The requirements are ANDed.
+                                          type: object
+                                      type: object
+                                      x-kubernetes-map-type: atomic
+                                    rego:
+                                      description: Rego data filter
+                                      type: string
+                                    source:
+                                      properties:
+                                        object:
+                                          properties:
+                                            gvks:
+                                              items:
+                                                properties:
+                                                  apiGroups:
+                                                    items:
+                                                      type: string
+                                                    type: array
+                                                  apiVersions:
+                                                    items:
+                                                      type: string
+                                                    type: array
+                                                  kinds:
+                                                    items:
+                                                      type: string
+                                                    type: array
+                                                type: object
+                                              type: array
+                                            labelSelector:
+                                              description: |-
+                                                A label selector is a label query over a set of resources. The result of matchLabels and
+                                                matchExpressions are ANDed. An empty label selector matches all objects. A null
+                                                label selector matches no objects.
+                                              properties:
+                                                matchExpressions:
+                                                  description: matchExpressions is
+                                                    a list of label selector requirements.
+                                                    The requirements are ANDed.
+                                                  items:
+                                                    description: |-
+                                                      A label selector requirement is a selector that contains values, a key, and an operator that
+                                                      relates the key and values.
+                                                    properties:
+                                                      key:
+                                                        description: key is the label
+                                                          key that the selector applies
+                                                          to.
+                                                        type: string
+                                                      operator:
+                                                        description: |-
+                                                          operator represents a key's relationship to a set of values.
+                                                          Valid operators are In, NotIn, Exists and DoesNotExist.
+                                                        type: string
+                                                      values:
+                                                        description: |-
+                                                          values is an array of string values. If the operator is In or NotIn,
+                                                          the values array must be non-empty. If the operator is Exists or DoesNotExist,
+                                                          the values array must be empty. This array is replaced during a strategic
+                                                          merge patch.
+                                                        items:
+                                                          type: string
+                                                        type: array
+                                                    required:
+                                                    - key
+                                                    - operator
+                                                    type: object
+                                                  type: array
+                                                matchLabels:
+                                                  additionalProperties:
+                                                    type: string
+                                                  description: |-
+                                                    matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels
+                                                    map is equivalent to an element of matchExpressions, whose key field is "key", the
+                                                    operator is "In", and the values array contains only "value". The requirements are ANDed.
+                                                  type: object
+                                              type: object
+                                              x-kubernetes-map-type: atomic
+                                            namespaces:
+                                              items:
+                                                type: string
+                                              type: array
+                                          type: object
+                                        uri:
+                                          type: string
+                                      type: object
+                                    target:
+                                      properties:
+                                        object:
+                                          properties:
+                                            gvks:
+                                              items:
+                                                properties:
+                                                  apiGroups:
+                                                    items:
+                                                      type: string
+                                                    type: array
+                                                  apiVersions:
+                                                    items:
+                                                      type: string
+                                                    type: array
+                                                  kinds:
+                                                    items:
+                                                      type: string
+                                                    type: array
+                                                type: object
+                                              type: array
+                                            labelSelector:
+                                              description: |-
+                                                A label selector is a label query over a set of resources. The result of matchLabels and
+                                                matchExpressions are ANDed. An empty label selector matches all objects. A null
+                                                label selector matches no objects.
+                                              properties:
+                                                matchExpressions:
+                                                  description: matchExpressions is
+                                                    a list of label selector requirements.
+                                                    The requirements are ANDed.
+                                                  items:
+                                                    description: |-
+                                                      A label selector requirement is a selector that contains values, a key, and an operator that
+                                                      relates the key and values.
+                                                    properties:
+                                                      key:
+                                                        description: key is the label
+                                                          key that the selector applies
+                                                          to.
+                                                        type: string
+                                                      operator:
+                                                        description: |-
+                                                          operator represents a key's relationship to a set of values.
+                                                          Valid operators are In, NotIn, Exists and DoesNotExist.
+                                                        type: string
+                                                      values:
+                                                        description: |-
+                                                          values is an array of string values. If the operator is In or NotIn,
+                                                          the values array must be non-empty. If the operator is Exists or DoesNotExist,
+                                                          the values array must be empty. This array is replaced during a strategic
+                                                          merge patch.
+                                                        items:
+                                                          type: string
+                                                        type: array
+                                                    required:
+                                                    - key
+                                                    - operator
+                                                    type: object
+                                                  type: array
+                                                matchLabels:
+                                                  additionalProperties:
+                                                    type: string
+                                                  description: |-
+                                                    matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels
+                                                    map is equivalent to an element of matchExpressions, whose key field is "key", the
+                                                    operator is "In", and the values array contains only "value". The requirements are ANDed.
+                                                  type: object
+                                              type: object
+                                              x-kubernetes-map-type: atomic
+                                            namespaces:
+                                              items:
+                                                type: string
+                                              type: array
+                                          type: object
+                                        uri:
+                                          type: string
+                                      type: object
+                                  type: object
+                                measurement:
+                                  properties:
+                                    blocking:
+                                      description: "Blocking\nif UsedForAdmission:\n\n\n\tMUST:
+                                        IntervalSeconds is nil\n\tMUST: Count is nil
+                                        or Count == 1\n\tMUST: InitialDelaySeconds
+                                        is nil\n\n\nMUST: (Failure != nil || Success
+                                        != nil) && (Failure == nil || Success == nil)"
+                                      properties:
+                                        count:
+                                          description: |-
+                                            Count
+                                            max num of execution
+                                          format: int64
+                                          type: integer
+                                        failure:
+                                          description: |-
+                                            Failure
+                                            threshold for failure
+                                          format: int64
+                                          type: integer
+                                        initialDelaySeconds:
+                                          format: int64
+                                          type: integer
+                                        intervalSeconds:
+                                          format: int64
+                                          type: integer
+                                        success:
+                                          description: |-
+                                            Success
+                                            threshold for success
+                                          format: int64
+                                          type: integer
+                                      type: object
+                                    inconclusivePolicy:
+                                      default: FailurePolicyIgnore
+                                      enum:
+                                      - FailurePolicyIgnore
+                                      - Fail
+                                      type: string
+                                    mode:
+                                      default: Blocking
+                                      enum:
+                                      - Blocking
+                                      - NonBlocking
+                                      type: string
+                                    provider:
+                                      properties:
+                                        plugin:
+                                          properties:
+                                            name:
+                                              type: string
+                                            parameters:
+                                              type: object
+                                              x-kubernetes-preserve-unknown-fields: true
+                                            registry:
+                                              type: string
+                                          type: object
+                                        prometheus:
+                                          properties:
+                                            address:
+                                              type: string
+                                            insecure:
+                                              type: boolean
+                                            query:
+                                              type: string
+                                            rego:
+                                              type: string
+                                          type: object
+                                        rego:
+                                          properties:
+                                            script:
+                                              type: string
+                                          type: object
+                                        timeRange:
+                                          properties:
+                                            items:
+                                              items:
+                                                properties:
+                                                  endTime:
+                                                    format: date-time
+                                                    type: string
+                                                  startTime:
+                                                    format: date-time
+                                                    type: string
+                                                type: object
+                                              type: array
+                                          type: object
+                                        webhook:
+                                          properties:
+                                            clientConfig:
+                                              description: |-
+                                                WebhookClientConfig contains the information to make a TLS
+                                                connection with the webhook
+                                              properties:
+                                                caBundle:
+                                                  description: |-
+                                                    `caBundle` is a PEM encoded CA bundle which will be used to validate the webhook's server certificate.
+                                                    If unspecified, system trust roots on the apiserver are used.
+                                                  format: byte
+                                                  type: string
+                                                service:
+                                                  description: |-
+                                                    `service` is a reference to the service for this webhook. Either
+                                                    `service` or `url` must be specified.
+
+
+                                                    If the webhook is running within the cluster, then you should use `service`.
+                                                  properties:
+                                                    name:
+                                                      description: |-
+                                                        `name` is the name of the service.
+                                                        Required
+                                                      type: string
+                                                    namespace:
+                                                      description: |-
+                                                        `namespace` is the namespace of the service.
+                                                        Required
+                                                      type: string
+                                                    path:
+                                                      description: |-
+                                                        `path` is an optional URL path which will be sent in any request to
+                                                        this service.
+                                                      type: string
+                                                    port:
+                                                      description: |-
+                                                        If specified, the port on the service that hosting webhook.
+                                                        Default to 443 for backward compatibility.
+                                                        `port` should be a valid port number (1-65535, inclusive).
+                                                      format: int32
+                                                      type: integer
+                                                  required:
+                                                  - name
+                                                  - namespace
+                                                  type: object
+                                                url:
+                                                  description: |-
+                                                    `url` gives the location of the webhook, in standard URL form
+                                                    (`scheme://host:port/path`). Exactly one of `url` or `service`
+                                                    must be specified.
+
+
+                                                    The `host` should not refer to a service running in the cluster; use
+                                                    the `service` field instead. The host might be resolved via external
+                                                    DNS in some apiservers (e.g., `kube-apiserver` cannot resolve
+                                                    in-cluster DNS as that would be a layering violation). `host` may
+                                                    also be an IP address.
+
+
+                                                    Please note that using `localhost` or `127.0.0.1` as a `host` is
+                                                    risky unless you take great care to run this webhook on all hosts
+                                                    which run an apiserver which might need to make calls to this
+                                                    webhook. Such installs are likely to be non-portable, i.e., not easy
+                                                    to turn up in a new cluster.
+
+
+                                                    The scheme must be "https"; the URL must begin with "https://".
+
+
+                                                    A path is optional, and if present may be any string permissible in
+                                                    a URL. You may use the path to pass an arbitrary string to the
+                                                    webhook, for example, a cluster identifier.
+
+
+                                                    Attempting to use a user or basic auth e.g. "user:password@" is not
+                                                    allowed. Fragments ("#...") and query parameters ("?...") are not
+                                                    allowed, either.
+                                                  type: string
+                                              type: object
+                                            failurePolicy:
+                                              description: FailurePolicyType specifies
+                                                a failure policy that defines how
+                                                unrecognized errors from the admission
+                                                endpoint are handled.
+                                              type: string
+                                            headers:
+                                              additionalProperties:
+                                                type: string
+                                              type: object
+                                            timeoutSeconds:
+                                              format: int32
+                                              type: integer
+                                          required:
+                                          - clientConfig
+                                          type: object
+                                      type: object
+                                    timeoutSeconds:
+                                      description: |-
+                                        TimeoutSeconds
+                                        max timeout period of single execution
+                                      format: int64
+                                      type: integer
+                                  type: object
+                              type: object
+                            type: array
+                          name:
+                            type: string
+                          stages:
+                            items:
+                              type: string
+                            type: array
+                        type: object
+                      type: array
+                    timeoutSeconds:
+                      description: TimeoutSeconds represents the duration within which
+                        a run should complete
+                      format: int64
+                      type: integer
+                    usedFor:
+                      enum:
+                      - Pointcut
+                      - Admission
+                      type: string
+                  type: object
+                type: array
+            type: object
+        type: object
+    served: true
+    storage: true

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: {{ .Values.service.fullname }}
+spec:
+  ports:
+    - name: restapi-server
+      port: 80
+      targetPort: restapi-server
+    - name: webhook-server
+      port: 443
+      targetPort: webhook-server
+  selector:
+    control-plane: {{ .Values.controlPlane }}

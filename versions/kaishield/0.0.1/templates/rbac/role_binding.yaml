@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: kaishield-manager-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kaishield-manager-role
+subjects:
+- kind: ServiceAccount
+  namespace: {{ .Values.namespace }}
+  name: {{ .Values.serviceAccount.fullname }}

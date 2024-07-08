@@ -1,0 +1,9 @@
+apiVersion: v2
+name: kaishield
+type: application
+description: A Helm chart for kaishield
+version: 0.0.1
+appVersion: "0.0.1"
+home: https://altershield.io
+sources:
+  - https://github.com/traas-stack/kaishield

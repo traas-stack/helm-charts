@@ -1,0 +1,44 @@
+namespace: kaishield-system
+
+controlPlane: kaishield-controller-manager
+
+service:
+  fullname: kaishield
+  restapiServer:
+    port: 80
+  webhookServer:
+    port: 6443
+
+controllerManager:
+  fullname: kaishield-controller-manager
+
+  commonLabels:
+    app.kubernetes.io/part-of: kaishield
+
+  replicaCount: 3
+
+  image:
+    tag: "0.0.1"
+    registry: ghcr.io
+    pullPolicy: IfNotPresent
+    repository: traas-stack/kaishield
+
+  resources:
+    limits:
+      cpu: 500m
+      memory: 128Mi
+    requests:
+      cpu: 10m
+      memory: 64Mi
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 80
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  fullname: kaishield-controller-manager

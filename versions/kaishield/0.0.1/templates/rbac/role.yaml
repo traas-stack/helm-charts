@@ -1,0 +1,116 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kaishield-manager-role
+rules:
+- apiGroups:
+    - admissionregistration.k8s.io
+  resources:
+    - mutatingwebhookconfigurations
+    - validatingwebhookconfigurations
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- apiGroups:
+    - ""
+  resources:
+    - secrets
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- apiGroups:
+    - ""
+  resources:
+    - secrets/status
+  verbs:
+    - get
+    - patch
+    - update
+- apiGroups:
+  - policy.kaishield.io
+  resources:
+  - latches
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - policy.kaishield.io
+  resources:
+  - latches/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - policy.kaishield.io
+  resources:
+  - latches/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - policy.kaishield.io
+  resources:
+  - scenarioruns
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - policy.kaishield.io
+  resources:
+  - scenarioruns/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - policy.kaishield.io
+  resources:
+  - scenarioruns/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - policy.kaishield.io
+  resources:
+  - scenariosets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - policy.kaishield.io
+  resources:
+  - scenariosets/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - policy.kaishield.io
+  resources:
+  - scenariosets/status
+  verbs:
+  - get
+  - patch
+  - update

@@ -1,0 +1,77 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: kaishield-mutating
+webhooks:
+  - admissionReviewVersions:
+      - v1
+      - v1beta1
+    clientConfig:
+      service:
+        namespace: {{ .Values.namespace }}
+        name: {{ .Values.service.fullname }}
+        path: /api/mutate-policy-kaishield-io-v1alpha1-latch
+    failurePolicy: Ignore
+    name: vlatch.kb.io
+    rules:
+      - apiGroups:
+          - policy.kaishield.io
+        apiVersions:
+          - v1alpha1
+        operations:
+          - CREATE
+          - UPDATE
+          - DELETE
+        resources:
+          - latches
+    sideEffects: None
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: kaishield-validating
+webhooks:
+  - admissionReviewVersions:
+      - v1
+      - v1beta1
+    clientConfig:
+      service:
+        namespace: {{ .Values.namespace }}
+        name: {{ .Values.service.fullname }}
+        path: /api/validate-policy-kaishield-io-v1alpha1-latch
+    failurePolicy: Fail
+    name: vlatch.kb.io
+    rules:
+      - apiGroups:
+          - policy.kaishield.io
+        apiVersions:
+          - v1alpha1
+        operations:
+          - CREATE
+          - UPDATE
+          - DELETE
+        resources:
+          - latches
+    sideEffects: None
+  - admissionReviewVersions:
+      - v1
+      - v1beta1
+    clientConfig:
+      service:
+        namespace: {{ .Values.namespace }}
+        name: {{ .Values.service.fullname }}
+        path: /api/validate-policy-kaishield-io-v1alpha1-scenariorun
+    failurePolicy: Fail
+    name: vscenariorun.kb.io
+    rules:
+      - apiGroups:
+          - policy.kaishield.io
+        apiVersions:
+          - v1alpha1
+        operations:
+          - CREATE
+          - UPDATE
+          - DELETE
+        resources:
+          - scenarioruns
+    sideEffects: None
