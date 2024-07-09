@@ -1,0 +1,17 @@
+apiVersion: v1
+entries:
+  kaishield:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2024-07-08T14:17:24.387316521Z"
+    description: A Helm chart for kaishield
+    digest: 604f2d47f083ea786da2fae810a13b23fbf70c7d0fe65080c4d31e16b3aaa7e6
+    home: https://altershield.io
+    name: kaishield
+    sources:
+    - https://github.com/traas-stack/kaishield
+    type: application
+    urls:
+    - https://github.com/traas-stack/helm-charts/releases/download/kaishield-0.0.1/kaishield-0.0.1.tgz
+    version: 0.0.1
+generated: "2024-07-08T14:17:24.387326179Z"
